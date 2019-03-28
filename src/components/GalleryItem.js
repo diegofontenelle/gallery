@@ -12,8 +12,8 @@ class GalleryItem extends Component {
         style={{ position: "relative", marginBottom: "12.5px" }}
       >
         <img
-          className="ui medium rounded image"
-          style={{ maxWidth: "100%" }}
+          className="ui centered rounded image"
+          style={{ width: "100%", maxWidth: "400px" }}
           src={this.props.url}
           alt="Photograph"
         />
@@ -47,7 +47,7 @@ class GalleryItem extends Component {
             className="ui icon button"
             style={{ position: "absolute", right: "0" }}
           >
-            <i class="arrow down icon" />
+            <i className="arrow down icon" />
           </button>
         </div>
       );

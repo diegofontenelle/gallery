@@ -10,6 +10,7 @@ import {
   CloseUploadButton
 } from "./styles";
 import FileList from "../FileList";
+import api from "../../services/api";
 
 export default class Upload extends Component {
   state = {
@@ -47,7 +48,9 @@ export default class Upload extends Component {
                 <input {...getInputProps()} />
                 {this.renderDragMessage(isDragActive, isDragReject)}
               </DropContainer>
-              {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
+              {!!uploadedFiles.length && (
+                <FileList files={uploadedFiles} onDelete={this.handleDelete} />
+              )}
               <CloseUploadButton onClick={this.props.onCloseUpload}>
                 <i className="white large times icon" />
               </CloseUploadButton>
@@ -58,8 +61,15 @@ export default class Upload extends Component {
     );
   }
 
-  handleUpload(files) {
-    console.log(files);
+  handleDelete = async id => {
+    await api.delete(`posts/${id}`);
+
+    this.setState({
+      uploadedFiles: this.state.uploadedFiles.filter(file => file.id !== id)
+    });
+  };
+
+  handleUpload = files => {
     const uploadedFiles = files.map(file => ({
       file,
       id: uniqueId(),
@@ -75,5 +85,46 @@ export default class Upload extends Component {
     this.setState({
       uploadedFiles: this.state.uploadedFiles.concat(uploadedFiles)
     });
-  }
+
+    uploadedFiles.forEach(this.processUpload);
+  };
+
+  updateFile = (id, data) => {
+    this.setState({
+      uploadedFiles: this.state.uploadedFiles.map(uploadedFile => {
+        return id === uploadedFile.id
+          ? { ...uploadedFile, ...data }
+          : uploadedFile;
+      })
+    });
+  };
+
+  processUpload = uploadedFile => {
+    const data = new FormData();
+
+    data.append("file", uploadedFile.file, uploadedFile.name);
+
+    api
+      .post("posts", data, {
+        onUploadProgress: e => {
+          const progress = parseInt(Math.round((e.loaded * 100) / e.total));
+
+          this.updateFile(uploadedFile.id, {
+            progress
+          });
+        }
+      })
+      .then(response => {
+        this.updateFile(uploadedFile.id, {
+          uploaded: true,
+          id: response.data._id,
+          url: response.data.url
+        });
+      })
+      .catch(() => {
+        this.updateFile(uploadedFile.id, {
+          error: true
+        });
+      });
+  };
 }

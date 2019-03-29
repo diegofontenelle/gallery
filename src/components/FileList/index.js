@@ -3,10 +3,10 @@ import CircularProgressBar from "react-circular-progressbar";
 
 import { Container, FileInfo, Preview } from "./styles";
 
-const FileList = ({ files }) => (
+const FileList = ({ files, onDelete }) => (
   <Container>
     {files.map(uploadedFile => (
-      <li>
+      <li key={uploadedFile.id}>
         <FileInfo>
           <Preview src={uploadedFile.preview} />
           <div>
@@ -14,7 +14,13 @@ const FileList = ({ files }) => (
             <span>
               {uploadedFile.readableSize}
               {uploadedFile.uploaded && (
-                <button onClick={() => {}}>Delete</button>
+                <button
+                  onClick={() => {
+                    onDelete(uploadedFile.id);
+                  }}
+                >
+                  Delete
+                </button>
               )}
             </span>
           </div>
@@ -34,7 +40,7 @@ const FileList = ({ files }) => (
 
           {uploadedFile.url && (
             <a
-              href="https://lux-gallery.s3.amazonaws.com/627deb93405adf0e29e60739eafb3958-WhatsApp%20Image%202019-03-12%20at%2019.34.49.jpeg"
+              href={uploadedFile.url}
               target="_blank"
               rel="noopener noreferrer"
             >

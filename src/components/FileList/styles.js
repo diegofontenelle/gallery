@@ -20,7 +20,7 @@ export const Container = styled.ul`
 
   div {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 `;
 

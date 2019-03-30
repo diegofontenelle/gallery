@@ -67,6 +67,8 @@ export default class Upload extends Component {
     this.setState({
       uploadedFiles: this.state.uploadedFiles.filter(file => file.id !== id)
     });
+
+    this.props.filesDidChange();
   };
 
   handleUpload = files => {
@@ -120,6 +122,8 @@ export default class Upload extends Component {
           id: response.data._id,
           url: response.data.url
         });
+
+        this.props.filesDidChange();
       })
       .catch(() => {
         this.updateFile(uploadedFile.id, {

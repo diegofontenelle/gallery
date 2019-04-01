@@ -3,7 +3,8 @@ import styled from "styled-components";
 export const GalleryItemContainer = styled.div`
   position: relative;
   margin-bottom: 12.5px;
-  background-color: #333;
+  background-color: #ddd;
+  border-radius: 0.3125em;
 
   img {
     width: 100%;

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 import { uniqueId } from "lodash";
 import filesize from "filesize";
+import { isMobile } from "react-device-detect";
 import {
   UploadContainer,
   DragContainer,
@@ -19,7 +20,11 @@ export default class Upload extends Component {
 
   renderDragMessage = (isDragActive, isDragReject) => {
     if (!isDragActive) {
-      return <UploadMessage>Drag your files here</UploadMessage>;
+      return (
+        <UploadMessage>
+          {isMobile ? "Upload" : "Drag your files here"}
+        </UploadMessage>
+      );
     }
 
     if (isDragReject) {

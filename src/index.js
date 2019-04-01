@@ -36,7 +36,7 @@ class App extends Component {
         <div className="ui container">
           <Gallery
             posts={this.state.posts}
-            filesDidChange={() => this.fetchPosts()}
+            filesDidChange={id => this.onDelete(id)}
           />
         </div>
         {this.state.showUpload && (
@@ -100,6 +100,13 @@ class App extends Component {
   closeUpload() {
     this.setState({ showUpload: false });
   }
+
+  onDelete = id => {
+    this.setState({
+      posts: this.state.posts.filter(post => post._id !== id)
+    });
+    console.log(this.state);
+  };
 }
 
 ReactDOM.render(<App />, document.querySelector("#root"));

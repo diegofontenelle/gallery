@@ -20,6 +20,10 @@ export const UploadMessage = styled.p`
   justify-content: center;
   align-items: center;
   padding: 15px 0;
+
+  @media only screen and (max-width: 1023px) {
+    font-size: 2em;
+  }
 `;
 
 export const DropContainer = styled.div.attrs({ className: "dropzone" })`
@@ -27,8 +31,14 @@ export const DropContainer = styled.div.attrs({ className: "dropzone" })`
   border-radius: 4px;
   cursor: pointer;
   padding: 20px;
+  outline: none;
   ${props => props.isDragActive && dragActive};
   ${props => props.isDragReject && dragReject};
+
+  @media only screen and (max-width: 1023px) {
+    border: none;
+    box-shadow: 0 1px 2px 3px rgba(34, 36, 38, 0.15);
+  }
 `;
 
 export const DragContainer = styled.div.attrs({ className: "dropzone" })`
@@ -37,6 +47,7 @@ export const DragContainer = styled.div.attrs({ className: "dropzone" })`
   max-width: 400px;
   background: #fff;
   padding: 30px;
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
 `;
 
 export const UploadContainer = styled.div`

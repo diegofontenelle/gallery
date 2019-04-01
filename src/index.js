@@ -12,11 +12,14 @@ class App extends Component {
     showUpload: false,
     loading: true,
     error: false,
-    posts: []
+    posts: [],
+    maxPostsReached: false,
+    isFetching: false
   };
 
   componentDidMount() {
     this.fetchPosts();
+    window.addEventListener("scroll", this.handleScroll.bind(this), true);
   }
 
   render() {
@@ -46,21 +49,44 @@ class App extends Component {
     );
   }
 
+  handleScroll(event) {
+    if (!this.state.maxPostsReached && !this.state.isFetching) {
+      const wrappedElement = document.getElementById("gallery");
+      if (this.isBottom(wrappedElement)) {
+        this.setState({ isFetching: true });
+        console.log("Time to fetch");
+        this.fetchPosts();
+      }
+    }
+  }
+
   fetchPosts() {
+    const skip = this.state.posts.length;
     try {
       api
-        .get("posts")
+        .get(`posts/${skip}`)
         .then(response => {
           console.log(response.data);
           this.setState({
             loading: false,
-            posts: [...response.data]
+            isFetching: false,
+            maxPostsReached: response.data.length === 0,
+            posts: [...this.state.posts, ...response.data]
           });
         })
         .catch(error => this.setState({ error: true, message: error.errmsg }));
     } catch (error) {
-      this.setState({ error: true, message: error.errmsg });
+      this.setState({
+        error: true,
+        message: error.errmsg,
+        loading: false,
+        isFetching: false
+      });
     }
+  }
+
+  isBottom(el) {
+    return el.getBoundingClientRect().bottom <= window.innerHeight + 2;
   }
 
   onError() {

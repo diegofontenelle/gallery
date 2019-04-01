@@ -10,7 +10,7 @@ const Gallery = ({ posts, filesDidChange }) => {
     );
     const pictureListThree = posts.slice((posts.length / 3) * 2, posts.length);
     return (
-      <div className="ui three column stackable grid">
+      <div id="gallery" className="ui three column stackable grid">
         <GalleryColumn
           filesDidChange={filesDidChange}
           pictureList={pictureListOne}

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { ButtonsContainer, GalleryItemContainer } from "./styles";
 import api from "../../services/api";
+import {
+  LazyLoadImage,
+  trackWindowScroll
+} from "react-lazy-load-image-component";
 
 class GalleryItem extends Component {
   state = {
@@ -8,13 +12,22 @@ class GalleryItem extends Component {
     imageLoaded: false,
     loading: false
   };
+
   render() {
+    const { url, id, key, scrollPosition } = this.props;
+
     return (
       <GalleryItemContainer loaded={this.state.imageLoaded}>
-        <img
-          className="ui centered rounded image"
-          src={this.props.url}
+        <LazyLoadImage
+          src={url}
+          id={id}
+          //filesDidChange={filesDidChange}
+          width="100%"
+          height="auto"
+          scrollPosition={scrollPosition}
+          key={key}
           alt="Photograph"
+          className="ui centered rounded image"
           onLoad={() =>
             this.setState({
               imageLoaded: true,
@@ -64,4 +77,4 @@ class GalleryItem extends Component {
   };
 }
 
-export default GalleryItem;
+export default trackWindowScroll(GalleryItem);

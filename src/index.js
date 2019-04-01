@@ -11,6 +11,7 @@ class App extends Component {
   state = {
     showUpload: false,
     loading: true,
+    error: false,
     posts: []
   };
 
@@ -22,11 +23,18 @@ class App extends Component {
     if (this.state.loading) {
       return <Loading text="Fetching awesome pictures" />;
     }
+
+    if (this.state.error) {
+      this.onError();
+    }
     return (
       <div>
         <Navbar onUploadClicked={() => this.showUpload()} />
         <div className="ui container">
-          <Gallery posts={this.state.posts} />
+          <Gallery
+            posts={this.state.posts}
+            filesDidChange={() => this.fetchPosts()}
+          />
         </div>
         {this.state.showUpload && (
           <Upload
@@ -39,13 +47,24 @@ class App extends Component {
   }
 
   fetchPosts() {
-    api.get("posts").then(response => {
-      console.log(response.data);
-      this.setState({
-        loading: false,
-        posts: [...response.data]
-      });
-    });
+    try {
+      api
+        .get("posts")
+        .then(response => {
+          console.log(response.data);
+          this.setState({
+            loading: false,
+            posts: [...response.data]
+          });
+        })
+        .catch(error => this.setState({ error: true, message: error.errmsg }));
+    } catch (error) {
+      this.setState({ error: true, message: error.errmsg });
+    }
+  }
+
+  onError() {
+    return <p>{this.state.message}</p>;
   }
 
   showUpload() {

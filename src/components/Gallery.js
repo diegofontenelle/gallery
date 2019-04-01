@@ -1,9 +1,7 @@
 import React from "react";
 import GalleryColumn from "./GalleryColumn";
 
-const Gallery = props => {
-  const { posts } = props;
-
+const Gallery = ({ posts, filesDidChange }) => {
   if (posts.length > 0) {
     const pictureListOne = posts.slice(0, posts.length / 3);
     const pictureListTwo = posts.slice(
@@ -13,9 +11,18 @@ const Gallery = props => {
     const pictureListThree = posts.slice((posts.length / 3) * 2, posts.length);
     return (
       <div className="ui three column stackable grid">
-        <GalleryColumn pictureList={pictureListOne} />
-        <GalleryColumn pictureList={pictureListTwo} />
-        <GalleryColumn pictureList={pictureListThree} />
+        <GalleryColumn
+          filesDidChange={filesDidChange}
+          pictureList={pictureListOne}
+        />
+        <GalleryColumn
+          filesDidChange={filesDidChange}
+          pictureList={pictureListTwo}
+        />
+        <GalleryColumn
+          filesDidChange={filesDidChange}
+          pictureList={pictureListThree}
+        />
       </div>
     );
   }

@@ -128,7 +128,7 @@ export default class Upload extends Component {
           url: response.data.url
         });
 
-        this.props.filesDidChange();
+        this.props.onUpload(response.data);
       })
       .catch(() => {
         this.updateFile(uploadedFile.id, {

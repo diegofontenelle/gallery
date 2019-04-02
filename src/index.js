@@ -43,6 +43,7 @@ class App extends Component {
           <Upload
             onCloseUpload={() => this.closeUpload()}
             filesDidChange={() => this.fetchPosts()}
+            onUpload={id => this.onUpload(id)}
           />
         )}
       </div>
@@ -100,6 +101,14 @@ class App extends Component {
   closeUpload() {
     this.setState({ showUpload: false });
   }
+
+  onUpload = post => {
+    console.log(post);
+    this.setState({
+      posts: [post, ...this.state.posts]
+    });
+    console.log(this.state);
+  };
 
   onDelete = id => {
     this.setState({

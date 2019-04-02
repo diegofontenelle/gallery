@@ -51,7 +51,12 @@ const FileList = ({ files, onDelete }) => (
           {uploadedFile.uploaded && (
             <i className="green large circle check icon" />
           )}
-          {uploadedFile.error && <i className="red big large times icon" />}
+          {uploadedFile.error && (
+            <>
+              <label>File too large</label>
+              <i className="red big large times icon" />
+            </>
+          )}
         </div>
       </li>
     ))}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import Gallery from "./components/Gallery";
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import Upload from "./components/Upload";
 import Loading from "./common/Loading";
 import api from "./services/api";

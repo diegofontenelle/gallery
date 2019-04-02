@@ -1,22 +1,15 @@
 import React from "react";
 import GalleryItem from "./GalleryItem";
 
-const GalleryColumn = ({ pictureList, filesDidChange }) => {
+const GalleryColumn = ({ pictureList, onDelete }) => {
   return (
-    <div className="column">
-      {renderGalleryItems(pictureList, filesDidChange)}
-    </div>
+    <div className="column">{renderGalleryItems(pictureList, onDelete)}</div>
   );
 };
 
-const renderGalleryItems = (pictureList, filesDidChange) => {
+const renderGalleryItems = (pictureList, onDelete) => {
   return pictureList.map((item, index) => (
-    <GalleryItem
-      url={item.url}
-      id={item._id}
-      filesDidChange={filesDidChange}
-      key={index}
-    />
+    <GalleryItem url={item.url} id={item._id} onDelete={onDelete} key={index} />
   ));
 };
 

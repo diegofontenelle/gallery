@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import _ from "lodash";
 import { ButtonsContainer, GalleryItemContainer } from "./styles";
 import api from "../../services/api";
 import {
@@ -79,7 +80,7 @@ class GalleryItem extends Component {
       this.setState({ loading: true });
       try {
         await api.delete(`posts/${id}`);
-        this.props.filesDidChange(id);
+        this.props.onDelete(id);
       } catch (error) {
         console.log(error);
       }

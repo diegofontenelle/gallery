@@ -73,7 +73,7 @@ export default class Upload extends Component {
       uploadedFiles: this.state.uploadedFiles.filter(file => file.id !== id)
     });
 
-    this.props.filesDidChange();
+    this.props.onDelete(id);
   };
 
   handleUpload = files => {

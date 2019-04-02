@@ -36,13 +36,13 @@ class App extends Component {
         <div className="ui container">
           <Gallery
             posts={this.state.posts}
-            filesDidChange={id => this.onDelete(id)}
+            onDelete={id => this.onDelete(id)}
           />
         </div>
         {this.state.showUpload && (
           <Upload
             onCloseUpload={() => this.closeUpload()}
-            filesDidChange={() => this.fetchPosts()}
+            onDelete={id => this.onDelete(id)}
             onUpload={id => this.onUpload(id)}
           />
         )}

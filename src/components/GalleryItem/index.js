@@ -7,11 +7,21 @@ import {
 } from "react-lazy-load-image-component";
 
 class GalleryItem extends Component {
+  _isMounted = false;
+
   state = {
     showButtons: false,
     imageLoaded: false,
     loading: false
   };
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
     const { url, id, key, scrollPosition } = this.props;
@@ -65,15 +75,17 @@ class GalleryItem extends Component {
   }
 
   handleDelete = async id => {
-    this.setState({ loading: true });
-    try {
-      await api.delete(`posts/${id}`);
-      this.props.filesDidChange();
-    } catch (error) {
-      console.log(error);
-    }
+    if (this._isMounted) {
+      this.setState({ loading: true });
+      try {
+        await api.delete(`posts/${id}`);
+        this.props.filesDidChange(id);
+      } catch (error) {
+        console.log(error);
+      }
 
-    this.setState({ loading: false });
+      this._isMounted && this.setState({ loading: false });
+    }
   };
 }
 

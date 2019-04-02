@@ -1,8 +1,11 @@
+## Gallery Images Upload
+This project provides the frontend of the Gallery application
+
 # Main Features
 
--Upload images up to 5mb
--Delete images from the gallery
--Get a url for sharing the images with your friends
+* Upload images up to 5mb
+* Delete images from the gallery
+* Get a url for sharing the images with your friends
 
 ## Environment Variables
 

@@ -1,22 +1,22 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components'
 
 const messageColors = {
-  default: "#999",
-  error: "#e57878",
-  success: "#78e5d5"
-};
+  default: '#999',
+  error: '#e57878',
+  success: '#78e5d5',
+}
 
 const dragActive = css`
   border-color: #78e5d5;
-`;
+`
 
 const dragReject = css`
   border-color: #e57878;
-`;
+`
 
 export const UploadMessage = styled.p`
   display: flex;
-  color: ${props => messageColors[props.type || "default"]};
+  color: ${props => messageColors[props.type || 'default']};
   justify-content: center;
   align-items: center;
   padding: 15px 0;
@@ -24,9 +24,9 @@ export const UploadMessage = styled.p`
   @media only screen and (max-width: 1023px) {
     font-size: 2em;
   }
-`;
+`
 
-export const DropContainer = styled.div.attrs({ className: "dropzone" })`
+export const DropContainer = styled.div.attrs({ className: 'dropzone' })`
   border: 2px dashed #ddd;
   border-radius: 4px;
   cursor: pointer;
@@ -39,16 +39,16 @@ export const DropContainer = styled.div.attrs({ className: "dropzone" })`
     border: none;
     box-shadow: 0 1px 2px 3px rgba(34, 36, 38, 0.15);
   }
-`;
+`
 
-export const DragContainer = styled.div.attrs({ className: "dropzone" })`
+export const DragContainer = styled.div.attrs({ className: 'dropzone' })`
   border-radius: 4px;
   width: 100%;
   max-width: 400px;
   background: #fff;
   padding: 30px;
   box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-`;
+`
 
 export const UploadContainer = styled.div`
   display: flex;
@@ -64,7 +64,7 @@ export const UploadContainer = styled.div`
   z-index: 2;
   width: 100%;
   height: 100%;
-`;
+`
 
 export const CloseUploadButton = styled.div`
   display: flex;
@@ -84,4 +84,4 @@ export const CloseUploadButton = styled.div`
   i {
     margin: 0;
   }
-`;
+`

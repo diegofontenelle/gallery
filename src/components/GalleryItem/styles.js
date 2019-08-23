@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const GalleryItemContainer = styled.div`
   position: relative;
@@ -12,7 +12,7 @@ export const GalleryItemContainer = styled.div`
     max-height: 500px;
     border-radius: 0.3125em;
   }
-`;
+`
 
 export const ButtonsContainer = styled.div`
   position: absolute;
@@ -35,4 +35,4 @@ export const ButtonsContainer = styled.div`
   i {
     cursor: pointer;
   }
-`;
+`

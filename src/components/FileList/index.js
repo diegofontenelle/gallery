@@ -1,7 +1,8 @@
-import React from "react";
-import CircularProgressBar from "react-circular-progressbar";
+import React from 'react'
+import PropTypes from 'prop-types'
+import CircularProgressBar from 'react-circular-progressbar'
 
-import { Container, FileInfo, Preview } from "./styles";
+import { Container, FileInfo, Preview } from './styles'
 
 const FileList = ({ files, onDelete }) => (
   <Container>
@@ -15,8 +16,9 @@ const FileList = ({ files, onDelete }) => (
               {uploadedFile.readableSize}
               {uploadedFile.uploaded && (
                 <button
+                  type="button"
                   onClick={() => {
-                    onDelete(uploadedFile.id);
+                    onDelete(uploadedFile.id)
                   }}
                 >
                   Delete
@@ -31,7 +33,7 @@ const FileList = ({ files, onDelete }) => (
             <CircularProgressBar
               styles={{
                 root: { width: 24 },
-                path: { stroke: "#7159c1" }
+                path: { stroke: '#7159c1' },
               }}
               strokeWidth={10}
               percentage={uploadedFile.progress}
@@ -39,28 +41,27 @@ const FileList = ({ files, onDelete }) => (
           )}
 
           {uploadedFile.url && (
-            <a
-              href={uploadedFile.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={uploadedFile.url} target="_blank" rel="noopener noreferrer">
               <i className="large linkify icon" />
             </a>
           )}
 
-          {uploadedFile.uploaded && (
-            <i className="green large circle check icon" />
-          )}
+          {uploadedFile.uploaded && <i className="green large circle check icon" />}
           {uploadedFile.error && (
             <>
-              <label>File too large</label>
-              <i className="red big large times icon" />
+              <span>File too large</span>
+              <i id="error-icon" className="red big large times icon" />
             </>
           )}
         </div>
       </li>
     ))}
   </Container>
-);
+)
 
-export default FileList;
+FileList.propTypes = {
+  files: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired,
+}
+
+export default FileList

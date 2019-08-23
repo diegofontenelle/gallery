@@ -1,93 +1,86 @@
-import React, { Component } from "react";
-import _ from "lodash";
-import { ButtonsContainer, GalleryItemContainer } from "./styles";
-import api from "../../services/api";
-import {
-  LazyLoadImage,
-  trackWindowScroll
-} from "react-lazy-load-image-component";
+import React, { useCallback, useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { LazyLoadImage, trackWindowScroll } from 'react-lazy-load-image-component'
+import { ButtonsContainer, GalleryItemContainer } from './styles'
+import api from '../../services/api'
 
-class GalleryItem extends Component {
-  _isMounted = false;
+const GalleryItem = ({ url, id, key, scrollPosition, onDelete }) => {
+  const [isMounted, setIsMounted] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [showButtons, setShowButtons] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  state = {
-    showButtons: false,
-    imageLoaded: false,
-    loading: false
-  };
+  useEffect(() => {
+    setIsMounted(true)
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
+    return function cleanup() {
+      setIsMounted(false)
+    }
+  }, [])
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
+  const handleDelete = useCallback(async itemId => {
+    if (isMounted) {
+      setLoading(true)
 
-  render() {
-    const { url, id, key, scrollPosition } = this.props;
+      try {
+        await api.delete(`posts/${itemId}`)
+        onDelete(itemId)
+      } catch (error) {
+        console.log(error)
+      }
 
-    return (
-      <GalleryItemContainer loaded={this.state.imageLoaded}>
-        <LazyLoadImage
-          src={url}
-          id={id}
-          //filesDidChange={filesDidChange}
-          width="100%"
-          height="auto"
-          scrollPosition={scrollPosition}
-          key={key}
-          alt="Photograph"
-          className="ui centered rounded image"
-          onLoad={() =>
-            this.setState({
-              imageLoaded: true,
-              showButtons: true,
-              loading: false
-            })
-          }
-        />
-        {this.renderButtons()}
-      </GalleryItemContainer>
-    );
-  }
+      isMounted && setLoading(false)
+    }
+  })
 
-  renderButtons() {
-    const { url, id } = this.props;
-    if (this.state.showButtons)
+  const renderButtons = () => {
+    if (showButtons)
       return (
         <ButtonsContainer>
-          {this.state.loading && <i className="spinner loading icon" />}
+          {loading && <i className="spinner loading icon" />}
 
-          {!this.state.loading && (
+          {!loading && (
             <>
               <a href={url} target="_blank" rel="noopener noreferrer">
                 <i className="linkify icon" />
               </a>
 
-              <i
-                onClick={() => this.handleDelete(id)}
-                className="trash red icon"
-              />
+              <i onClick={() => handleDelete(id)} className="trash red icon" />
             </>
           )}
         </ButtonsContainer>
-      );
+      )
   }
 
-  handleDelete = async id => {
-    if (this._isMounted) {
-      this.setState({ loading: true });
-      try {
-        await api.delete(`posts/${id}`);
-        this.props.onDelete(id);
-      } catch (error) {
-        console.log(error);
-      }
-
-      this._isMounted && this.setState({ loading: false });
-    }
-  };
+  return (
+    <GalleryItemContainer loaded={imageLoaded}>
+      <LazyLoadImage
+        src={url}
+        id={id}
+        // filesDidChange={filesDidChange}
+        width="100%"
+        height="auto"
+        scrollPosition={scrollPosition}
+        key={key}
+        alt="Photograph"
+        className="ui centered rounded image"
+        onLoad={() => {
+          setImageLoaded(true)
+          setShowButtons(true)
+          setLoading(false)
+        }}
+      />
+      {renderButtons()}
+    </GalleryItemContainer>
+  )
 }
 
-export default trackWindowScroll(GalleryItem);
+GalleryItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  key: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  scrollPosition: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+}
+
+export default trackWindowScroll(GalleryItem)

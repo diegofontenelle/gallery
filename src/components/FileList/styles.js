@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import "react-circular-progressbar/dist/styles.css";
+import styled from 'styled-components'
+import 'react-circular-progressbar/dist/styles.css'
 
 export const Container = styled.ul`
   padding: 0;
@@ -22,7 +22,7 @@ export const Container = styled.ul`
     display: flex;
     align-items: flex-start;
   }
-`;
+`
 
 export const FileInfo = styled.div`
   display: flex;
@@ -46,7 +46,7 @@ export const FileInfo = styled.div`
       }
     }
   }
-`;
+`
 
 export const Preview = styled.div`
   width: 36px;
@@ -57,4 +57,4 @@ export const Preview = styled.div`
   background-size: cover;
   background-position: 50% 50%;
   margin-right: 10px;
-`;
+`

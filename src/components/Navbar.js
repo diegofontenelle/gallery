@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Navbar = ({ onUploadClicked }) => {
   return (
@@ -16,6 +17,10 @@ const Navbar = ({ onUploadClicked }) => {
       </div>
     </div>
   )
+}
+
+Navbar.propTypes = {
+  onUploadClicked: PropTypes.func.isRequired,
 }
 
 export default Navbar

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import ReactDOM from 'react-dom'
 import 'semantic-ui-css/semantic.min.css'
 import Gallery from './components/Gallery'
@@ -7,112 +7,76 @@ import Upload from './components/Upload'
 import Loading from './common/Loading'
 import api from './services/api'
 
-class App extends Component {
-  state = {
-    showUpload: false,
-    loading: true,
-    error: false,
-    posts: [],
-    maxPostsReached: false,
-    isFetching: false,
-  }
+const App = () => {
+  const [showUpload, setShowUpload] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [posts, setPosts] = useState([])
+  const [maxPostsReached, setMaxPostsReached] = useState(false)
+  const [fetching, setFetching] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
-  componentDidMount() {
-    this.fetchPosts()
-    window.addEventListener('scroll', this.handleScroll.bind(this), true)
-  }
+  const fetchPosts = useCallback(() => {
+    const skip = posts.length
 
-  render() {
-    if (this.state.loading) {
-      return <Loading text="Fetching awesome pictures" />
-    }
-
-    if (this.state.error) {
-      this.onError()
-    }
-    return (
-      <div>
-        <Navbar onUploadClicked={() => this.showUpload()} />
-        <div className="ui container">
-          <Gallery posts={this.state.posts} onDelete={id => this.onDelete(id)} />
-        </div>
-        {this.state.showUpload && (
-          <Upload
-            onCloseUpload={() => this.closeUpload()}
-            onDelete={id => this.onDelete(id)}
-            onUpload={id => this.onUpload(id)}
-          />
-        )}
-      </div>
-    )
-  }
-
-  handleScroll(event) {
-    if (!this.state.maxPostsReached && !this.state.isFetching) {
-      const wrappedElement = document.getElementById('gallery')
-      if (this.isBottom(wrappedElement)) {
-        this.setState({ isFetching: true })
-        console.log('Time to fetch')
-        this.fetchPosts()
-      }
-    }
-  }
-
-  fetchPosts() {
-    const skip = this.state.posts.length
     try {
       api
         .get(`posts/${skip}`)
         .then(response => {
-          console.log(response.data)
-          this.setState({
-            loading: false,
-            isFetching: false,
-            maxPostsReached: response.data.length === 0,
-            posts: [...this.state.posts, ...response.data],
-          })
+          setLoading(false)
+          setFetching(false)
+          setMaxPostsReached(response.data.length === 0)
+          setPosts([...posts, ...response.data])
         })
-        .catch(error => this.setState({ error: true, message: error.errmsg }))
-    } catch (error) {
-      this.setState({
-        error: true,
-        message: error.errmsg,
-        loading: false,
-        isFetching: false,
-      })
+        .catch(err => {
+          setError(true)
+          setErrorMessage(err.errmsg)
+        })
+    } catch (err) {
+      setError(true)
+      setErrorMessage(err.errmsg)
+      setLoading(false)
+      setFetching(false)
     }
-  }
+  }, [loading, fetching, maxPostsReached, error, errorMessage])
 
-  isBottom(el) {
-    return el.getBoundingClientRect().bottom <= window.innerHeight + 2
-  }
+  const atBottom = element => element.getBoundingClientRect().bottom <= window.innerHeight + 2
 
-  onError() {
-    return <p>{this.state.message}</p>
-  }
+  const handleScroll = useCallback(() => {
+    if (!maxPostsReached && !fetching) {
+      const wrappedElement = document.getElementById('gallery')
+      if (wrappedElement)
+        if (atBottom(wrappedElement)) {
+          setFetching(true)
+          fetchPosts()
+        }
+    }
+  }, [maxPostsReached, fetching])
 
-  showUpload() {
-    this.setState({ showUpload: true })
-  }
+  useEffect(() => {
+    fetchPosts()
+    window.addEventListener('scroll', handleScroll, true)
+  }, [])
 
-  closeUpload() {
-    this.setState({ showUpload: false })
-  }
+  return (
+    <>
+      {loading && <Loading text="Fetching awesome pictures" />}
+      {error && <p>{errorMessage}</p>}
 
-  onUpload = post => {
-    console.log(post)
-    this.setState({
-      posts: [post, ...this.state.posts],
-    })
-    console.log(this.state)
-  }
-
-  onDelete = id => {
-    this.setState({
-      posts: this.state.posts.filter(post => post._id !== id),
-    })
-    console.log(this.state)
-  }
+      {!loading && (
+        <div>
+          <Navbar onUploadClicked={() => setShowUpload(true)} />
+          <div className="ui container">
+            <Gallery
+              posts={posts}
+              onDelete={id => setPosts(posts.filter(post => post._id !== id))}
+            />
+          </div>
+          {showUpload && <Upload />}
+        </div>
+      )}
+    </>
+  )
 }
 
 ReactDOM.render(<App />, document.querySelector('#root'))

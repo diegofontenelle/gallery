@@ -72,7 +72,13 @@ const App = () => {
               onDelete={id => setPosts(posts.filter(post => post._id !== id))}
             />
           </div>
-          {showUpload && <Upload />}
+          {showUpload && (
+            <Upload
+              onCloseUpload={() => setShowUpload(false)}
+              onDelete={id => setPosts(posts.filter(post => post._id !== id))}
+              onUpload={post => setPosts([post, ...posts])}
+            />
+          )}
         </div>
       )}
     </>

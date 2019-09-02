@@ -78,7 +78,8 @@ const Upload = ({ onDelete, onUpload, onCloseUpload }) => {
       })
   }
 
-  const handleUpload = useCallback(files => {
+  const handleUpload = files => {
+    console.log('upload started')
     setUploadedFiles(
       uploadedFiles.concat(
         files.map(file => ({
@@ -96,7 +97,7 @@ const Upload = ({ onDelete, onUpload, onCloseUpload }) => {
     )
 
     uploadedFiles.forEach(processUpload)
-  })
+  }
 
   return (
     <UploadContainer>
